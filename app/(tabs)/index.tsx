@@ -1,75 +1,87 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { Image, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+
+const sections = [
+  {
+    title: 'Yoga',
+    image: 'https://images.unsplash.com/photo-1504196606672-aef5c9cefc92',
+  },
+  {
+    title: 'Meditation',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+  },
+  {
+    title: 'Prayer',
+    image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca',
+  },
+];
 
 export default function HomeScreen() {
+  const router = useRouter();
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar style="auto" />
+      {/* <ThemedView style={styles.container} lightColor="#fff" darkColor="#151718"> */}
+        <ThemedText type="title" style={styles.header}>Choose a Practice</ThemedText>
+        <View style={styles.grid}>
+          {sections.map((section) => (
+            <TouchableOpacity
+              key={section.title}
+              activeOpacity={0.85}
+              onPress={() => router.push({ pathname: '/details', params: { section: section.title } })}
+            >
+              <ThemedView style={styles.card} lightColor="#fff" darkColor="#222">
+                <Image source={{ uri: section.image }} style={styles.image} />
+                <ThemedText type="subtitle" style={styles.cardTitle}>{section.title}</ThemedText>
+              </ThemedView>
+            </TouchableOpacity>
+          ))}
+        </View>
+      {/* </ThemedView> */}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+    padding: 24,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  header: {
+    marginBottom: 24,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  grid: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 16,
+  },
+  card: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    width: 320,
+    height: 240,
+  },
+  image: {
+    width: 260,
+    height: 140,
+    borderRadius: 16,
+    marginBottom: 16,
+  },
+  cardTitle: {
+    textAlign: 'center',
+    color: '#333',
   },
 });

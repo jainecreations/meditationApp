@@ -4,10 +4,15 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const systemColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useState(systemColorScheme);
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -17,13 +22,39 @@ export default function RootLayout() {
     return null;
   }
 
+  const toggleScheme = () => {
+    setColorScheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
+      <View style={{ flex: 1 }}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+              <TouchableOpacity style={styles.toggle} onPress={toggleScheme}>
+                <Ionicons
+                  name={colorScheme === 'dark' ? 'sunny' : 'moon'}
+                  size={28}
+                  color={colorScheme === 'dark' ? '#FFA500' : '#333'}
+                />
+              </TouchableOpacity>
+        <StatusBar style="auto" />
+      </View>
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  toggle: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    backgroundColor: '#eee',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    elevation: 2,
+  },
+});
