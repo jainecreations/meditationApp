@@ -28,3 +28,4 @@ Make sure you have Expo Go installed on your mobile device for easy testing.
 ---
 
 Replace placeholder images and YouTube URLs in the app as needed.
+# meditationApp
